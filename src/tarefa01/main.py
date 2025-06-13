@@ -120,8 +120,6 @@ def main():
     time.sleep(2)
     print("\n" + "="*60)
     print("=== TESTES DE CONTROLE DE ACESSO CONCLUÍDOS ===")
-    
-    print("\nPara executar novamente, o ambiente será automaticamente limpo na próxima execução.")
 
 if __name__ == "__main__":
     main()

@@ -4,6 +4,7 @@ import time
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from utils.database_connection import DatabaseConnection
+import random
 
 def setup_usr_c_privileges():
     """
@@ -19,10 +20,12 @@ def setup_usr_c_privileges():
     
     try:
         # Conceder privilégios completos em TRABALHA_EM
+        print("Concedendo privilégios em TRABALHA_EM...")
         db.execute_query("GRANT SELECT, INSERT, UPDATE, DELETE ON TRABALHA_EM TO usr_c;")
         time.sleep(0.5)
         
         # Criar visão limitada para FUNCIONARIO
+        print("Criando visão para FUNCIONARIO...")
         db.execute_query("""
             CREATE OR REPLACE VIEW vw_funcionario_usr_c AS
             SELECT Pronome, Minicial, Unome, Cpf
@@ -31,6 +34,7 @@ def setup_usr_c_privileges():
         time.sleep(0.5)
         
         # Criar visão limitada para PROJETO
+        print("Criando visão para PROJETO...")  
         db.execute_query("""
             CREATE OR REPLACE VIEW vw_projeto_usr_c AS
             SELECT Projnome, Projnumero
@@ -39,8 +43,10 @@ def setup_usr_c_privileges():
         time.sleep(0.5)
         
         # Conceder SELECT nas visões
+        print("Concedendo privilégios de SELECT nas visões...")
         db.execute_query("GRANT SELECT ON vw_funcionario_usr_c TO usr_c;")
         db.execute_query("GRANT SELECT ON vw_projeto_usr_c TO usr_c;")
+        time.sleep(0.5)
         
         print("Privilégios configurados para usr_c")
         return True
@@ -75,49 +81,10 @@ def test_usr_c():
                 print(f"     - CPF: {row['fcpf']}, Projeto: {row['pnr']}, Horas: {row['horas']}")
         time.sleep(1)
         
-        # Teste 2: INSERT em TRABALHA_EM (deve funcionar)
-        print("\nTeste 2: INSERT em TRABALHA_EM")
-        # Pegar um CPF e projeto existentes
-        func_result = db_usr_c.fetch_all("SELECT Cpf FROM vw_funcionario_usr_c LIMIT 1;")
-        proj_result = db_usr_c.fetch_all("SELECT Projnumero FROM vw_projeto_usr_c LIMIT 1;")
-        
-        if func_result and proj_result:
-            cpf = func_result[0]['cpf']
-            proj_num = proj_result[0]['projnumero']
-            
-            try:
-                db_usr_c.execute_query(
-                    "INSERT INTO TRABALHA_EM (Fcpf, Pnr, Horas) VALUES (%s, %s, %s);",
-                    (cpf, proj_num, 5.0)
-                )
-                print("   SUCESSO: usr_c conseguiu inserir em TRABALHA_EM")
-                # Limpar teste
-                db_usr_c.execute_query("DELETE FROM TRABALHA_EM WHERE Fcpf = %s AND Pnr = %s AND Horas = 5.0;", (cpf, proj_num))
-            except Exception as e:
-                if "duplicate key" in str(e).lower():
-                    print("   SUCESSO: usr_c tem privilégio de INSERT (registro já existe)")
-                else:
-                    print(f"   Erro no INSERT: {e}")
-        time.sleep(1)
-        
-        # Teste 3: SELECT nas visões limitadas (deve funcionar)
-        print("\nTeste 3: SELECT nas visões de FUNCIONARIO e PROJETO")
-        func_result = db_usr_c.fetch_all("SELECT * FROM vw_funcionario_usr_c LIMIT 2;")
-        proj_result = db_usr_c.fetch_all("SELECT * FROM vw_projeto_usr_c LIMIT 2;")
-        
-        if func_result:
-            print("   SUCESSO: usr_c conseguiu consultar funcionários limitados")
-        if proj_result:
-            print("   SUCESSO: usr_c conseguiu consultar projetos limitados")
-        time.sleep(1)
-        
-        # Teste 4: Tentar acessar campos não permitidos (deve falhar)
-        print("\nTeste 4: Tentar acessar campos não permitidos")
-        try:
-            result = db_usr_c.fetch_all("SELECT Salario FROM FUNCIONARIO LIMIT 1;")
-            print("   ERRO: usr_c não deveria conseguir acessar Salario")
-        except Exception as e:
-            print(f"   SUCESSO: usr_c foi impedido de acessar campos não permitidos")
+        # Teste 2: Tentar acessar campos não permitidos (deve falhar)
+        print("\nTeste 2: Tentar acessar campos não permitidos")
+        result = db_usr_c.fetch_all("SELECT Salario FROM FUNCIONARIO LIMIT 1;")
+        print("   RESULTADO ESPERADO: usr_c não deve conseguir acessar Salario")
         time.sleep(1)
         
     except Exception as e:

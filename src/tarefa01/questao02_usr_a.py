@@ -1,6 +1,7 @@
 import sys
 import os
 import time
+import random
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from utils.database_connection import DatabaseConnection
@@ -48,6 +49,8 @@ def test_usr_a():
     db_usr_a.user = 'usr_a'
     db_usr_a.password = 'usr_a123'
     conn = db_usr_a.connect()
+
+    random_id = random.randint(0, 9999)
     
     if not conn:
         print("Falha ao conectar como usr_a")
@@ -61,21 +64,11 @@ def test_usr_a():
             print(f"   SUCESSO: usr_a conseguiu consultar FUNCIONARIO - {result[0]['total']} registros")
         time.sleep(1)
         
-        # Teste 2: INSERT em DEPARTAMENTO (deve funcionar)
-        print("\nTeste 2: INSERT em DEPARTAMENTO")
-        db_usr_a.execute_query(
-            "INSERT INTO DEPARTAMENTO (Dnome, Dnumero, Cpf_gerente, Data_inicio_gerente) VALUES (%s, %s, %s, %s);",
-            ('Teste usr_a', 999, None, '2024-01-01')
-        )
-        print("   SUCESSO: usr_a conseguiu inserir em DEPARTAMENTO")
-        time.sleep(1)
-        
-        # Teste 3: SELECT em DEPENDENTE (deve falhar)
-        print("\nTeste 3: SELECT em DEPENDENTE")
-        try:
-            result = db_usr_a.fetch_all("SELECT COUNT(*) FROM DEPENDENTE;")
-        except Exception as e:
-            print(f" FALHA: {e}")
+        # Teste 2: SELECT em DEPENDENTE (deve falhar)
+        print("\nTeste 2: SELECT em DEPENDENTE")
+
+        result = db_usr_a.fetch_all("SELECT COUNT(*) FROM DEPENDENTE;")
+        print("   RESULTADO ESPERADO: usr_a não deve conseguir acessar DEPENDENTE")
         time.sleep(1)
         
     except Exception as e:

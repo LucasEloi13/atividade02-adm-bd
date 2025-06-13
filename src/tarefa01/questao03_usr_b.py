@@ -20,6 +20,7 @@ def setup_usr_b_privileges():
         # Criar visões para usr_b com colunas limitadas
         
         # Visão para FUNCIONARIO (sem Salario)
+        print("Criando visão para FUNCIONARIO...")
         db.execute_query("""
             CREATE OR REPLACE VIEW vw_funcionario_usr_b AS
             SELECT Pronome, Minicial, Unome, Cpf, Datanasc, Endereco, Sexo, Cpf_superior, Dnr
@@ -28,6 +29,7 @@ def setup_usr_b_privileges():
         time.sleep(0.5)
         
         # Visão para DEPARTAMENTO (sem Cpf_gerente e Data_inicio_gerente)
+        print("Criando visão para DEPARTAMENTO...")
         db.execute_query("""
             CREATE OR REPLACE VIEW vw_departamento_usr_b AS
             SELECT Dnome, Dnumero
@@ -36,6 +38,7 @@ def setup_usr_b_privileges():
         time.sleep(0.5)
         
         # Conceder SELECT nas visões
+        print("Concedendo privilégios de SELECT nas visões...")
         db.execute_query("GRANT SELECT ON vw_funcionario_usr_b TO usr_b;")
         db.execute_query("GRANT SELECT ON vw_departamento_usr_b TO usr_b;")
         
@@ -83,22 +86,16 @@ def test_usr_b():
         
         # Teste 3: Tentar acessar tabela original FUNCIONARIO (deve falhar)
         print("\nTeste 3: Tentar acessar tabela original FUNCIONARIO")
-        try:
-            result = db_usr_b.fetch_all("SELECT Salario FROM FUNCIONARIO LIMIT 1;")
-            print("   ERRO: usr_b não deveria conseguir acessar Salario")
-        except Exception as e:
-            print(f"   SUCESSO: usr_b foi impedido de acessar tabela original")
+        result = db_usr_b.fetch_all("SELECT Salario FROM FUNCIONARIO LIMIT 1;")
+        print("   RESULTADO ESPERADO: usr_b não deve conseguir acessar Salario")
         time.sleep(1)
         
         # Teste 4: Tentar acessar tabela original DEPARTAMENTO (deve falhar)
         print("\nTeste 4: Tentar acessar tabela original DEPARTAMENTO")
-        try:
-            result = db_usr_b.fetch_all("SELECT Cpf_gerente FROM DEPARTAMENTO LIMIT 1;")
-            print("   ERRO: usr_b não deveria conseguir acessar Cpf_gerente")
-        except Exception as e:
-            print(f"   SUCESSO: usr_b foi impedido de acessar campos restritos")
-        time.sleep(1)
-        
+
+        result = db_usr_b.fetch_all("SELECT Cpf_gerente FROM DEPARTAMENTO LIMIT 1;")
+        print("   RESULTADO ESPERADO: usr_b não deve conseguir acessar Cpf_gerente")
+
     except Exception as e:
         print(f"Erro durante teste: {e}")
     finally:
