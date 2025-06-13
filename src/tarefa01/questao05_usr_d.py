@@ -7,7 +7,7 @@ from utils.database_connection import DatabaseConnection
 
 def setup_usr_d_privileges():
     """
-    Questão 5: usr_D pode recuperar qualquer atributo de FUNCIONARIO ou DEPENDENTE
+    Questão 5: usr_d pode recuperar qualquer atributo de FUNCIONARIO ou DEPENDENTE
     e pode modificar DEPENDENTE.
     """
     db = DatabaseConnection()
@@ -18,34 +18,34 @@ def setup_usr_d_privileges():
     
     try:
         # Conceder SELECT em FUNCIONARIO
-        db.execute_query("GRANT SELECT ON FUNCIONARIO TO usr_D;")
+        db.execute_query("GRANT SELECT ON FUNCIONARIO TO usr_d;")
         time.sleep(0.5)
         
         # Conceder SELECT, INSERT, UPDATE, DELETE em DEPENDENTE
-        db.execute_query("GRANT SELECT, INSERT, UPDATE, DELETE ON DEPENDENTE TO usr_D;")
+        db.execute_query("GRANT SELECT, INSERT, UPDATE, DELETE ON DEPENDENTE TO usr_d;")
         time.sleep(0.5)
         
-        print("Privilégios configurados para usr_D")
+        print("Privilégios configurados para usr_d")
         return True
         
     except Exception as e:
-        print(f"Erro ao configurar privilégios para usr_D: {e}")
+        print(f"Erro ao configurar privilégios para usr_d: {e}")
         return False
     finally:
         db.disconnect()
 
 def test_usr_d():
-    """Testa os privilégios do usr_D"""
-    print("\n=== TESTANDO PRIVILÉGIOS DO USR_D ===")
+    """Testa os privilégios do usr_d"""
+    print("\n=== TESTANDO PRIVILÉGIOS DO usr_d ===")
     time.sleep(1)
     
     db_usr_d = DatabaseConnection()
-    db_usr_d.user = 'usr_D'
-    db_usr_d.password = 'usr_D123'
+    db_usr_d.user = 'usr_d'
+    db_usr_d.password = 'usr_d123'
     conn = db_usr_d.connect()
     
     if not conn:
-        print("Falha ao conectar como usr_D")
+        print("Falha ao conectar como usr_d")
         return
     
     try:
@@ -53,7 +53,7 @@ def test_usr_d():
         print("\nTeste 1: SELECT em FUNCIONARIO")
         result = db_usr_d.fetch_all("SELECT Pronome, Unome, Salario FROM FUNCIONARIO LIMIT 3;")
         if result:
-            print(f"   SUCESSO: usr_D conseguiu consultar FUNCIONARIO")
+            print(f"   SUCESSO: usr_d conseguiu consultar FUNCIONARIO")
             for row in result:
                 print(f"     - {row['pronome']} {row['unome']} - Salário: R$ {row['salario']}")
         time.sleep(1)
@@ -62,11 +62,11 @@ def test_usr_d():
         print("\nTeste 2: SELECT em DEPENDENTE")
         result = db_usr_d.fetch_all("SELECT * FROM DEPENDENTE LIMIT 3;")
         if result:
-            print(f"   SUCESSO: usr_D conseguiu consultar DEPENDENTE")
+            print(f"   SUCESSO: usr_d conseguiu consultar DEPENDENTE")
             for row in result:
                 print(f"     - {row['nome_dependente']} ({row['parentesco']})")
         else:
-            print("   SUCESSO: usr_D pode acessar DEPENDENTE (sem registros)")
+            print("   SUCESSO: usr_d pode acessar DEPENDENTE (sem registros)")
         time.sleep(1)
         
         # Teste 3: INSERT em DEPENDENTE (deve funcionar)
@@ -78,16 +78,16 @@ def test_usr_d():
             try:
                 db_usr_d.execute_query(
                     "INSERT INTO DEPENDENTE (Fcpf, Nome_dependente, Sexo, Datanasc, Parentesco) VALUES (%s, %s, %s, %s, %s);",
-                    (cpf, 'Teste usr_D', 'M', '2020-01-01', 'Filho(a)')
+                    (cpf, 'Teste usr_d', 'M', '2020-01-01', 'Filho(a)')
                 )
-                print("   SUCESSO: usr_D conseguiu inserir em DEPENDENTE")
+                print("   SUCESSO: usr_d conseguiu inserir em DEPENDENTE")
                 
                 # Limpar teste
-                db_usr_d.execute_query("DELETE FROM DEPENDENTE WHERE Nome_dependente = 'Teste usr_D';")
+                db_usr_d.execute_query("DELETE FROM DEPENDENTE WHERE Nome_dependente = 'Teste usr_d';")
                 
             except Exception as e:
                 if "duplicate key" in str(e).lower():
-                    print("   SUCESSO: usr_D tem privilégio de INSERT (registro já existe)")
+                    print("   SUCESSO: usr_d tem privilégio de INSERT (registro já existe)")
                 else:
                     print(f"   Erro no INSERT: {e}")
         time.sleep(1)
@@ -96,18 +96,18 @@ def test_usr_d():
         print("\nTeste 4: Tentar modificar FUNCIONARIO")
         try:
             db_usr_d.execute_query("UPDATE FUNCIONARIO SET Salario = 1000 WHERE Cpf = '12345678901';")
-            print("   ERRO: usr_D não deveria conseguir modificar FUNCIONARIO")
+            print("   ERRO: usr_d não deveria conseguir modificar FUNCIONARIO")
         except Exception as e:
-            print(f"   SUCESSO: usr_D foi impedido de modificar FUNCIONARIO")
+            print(f"   SUCESSO: usr_d foi impedido de modificar FUNCIONARIO")
         time.sleep(1)
         
         # Teste 5: Tentar acessar tabela não permitida (deve falhar)
         print("\nTeste 5: Tentar acessar DEPARTAMENTO")
         try:
             result = db_usr_d.fetch_all("SELECT * FROM DEPARTAMENTO LIMIT 1;")
-            print("   ERRO: usr_D não deveria conseguir acessar DEPARTAMENTO")
+            print("   ERRO: usr_d não deveria conseguir acessar DEPARTAMENTO")
         except Exception as e:
-            print(f"   SUCESSO: usr_D foi impedido de acessar DEPARTAMENTO")
+            print(f"   SUCESSO: usr_d foi impedido de acessar DEPARTAMENTO")
         time.sleep(1)
         
     except Exception as e:

@@ -15,7 +15,7 @@ def create_users():
     
     # Usar nomes em minúscula para evitar problemas de case-sensitivity
     users = ['usr_a', 'usr_b', 'usr_c', 'usr_d', 'usr_e']
-    passwords = ['usr_A123', 'usr_B123', 'usr_C123', 'usr_D123', 'usr_E123']
+    passwords = ['usr_a123', 'usr_B123', 'usr_c123', 'usr_d123', 'usr_e123']
     
     try:
         for i, user in enumerate(users):

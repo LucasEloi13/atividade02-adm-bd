@@ -70,8 +70,8 @@ def main():
     time.sleep(2)
     print("\n" + "="*60)
     
-    # Passo 2: Configurar e testar usr_A
-    print("2. Configurando e testando usr_A...")
+    # Passo 2: Configurar e testar usr_a
+    print("2. Configurando e testando usr_a...")
     time.sleep(1)
     if setup_usr_a_privileges():
         time.sleep(1)
@@ -80,8 +80,8 @@ def main():
     time.sleep(3)
     print("\n" + "="*60)
     
-    # Passo 3: Configurar e testar usr_B
-    print("3. Configurando e testando usr_B...")
+    # Passo 3: Configurar e testar usr_b
+    print("3. Configurando e testando usr_b...")
     time.sleep(1)
     if setup_usr_b_privileges():
         time.sleep(1)
@@ -90,8 +90,8 @@ def main():
     time.sleep(3)
     print("\n" + "="*60)
     
-    # Passo 4: Configurar e testar usr_C
-    print("4. Configurando e testando usr_C...")
+    # Passo 4: Configurar e testar usr_c
+    print("4. Configurando e testando usr_c...")
     time.sleep(1)
     if setup_usr_c_privileges():
         time.sleep(1)
@@ -100,8 +100,8 @@ def main():
     time.sleep(3)
     print("\n" + "="*60)
     
-    # Passo 5: Configurar e testar usr_D
-    print("5. Configurando e testando usr_D...")
+    # Passo 5: Configurar e testar usr_d
+    print("5. Configurando e testando usr_d...")
     time.sleep(1)
     if setup_usr_d_privileges():
         time.sleep(1)
@@ -110,8 +110,8 @@ def main():
     time.sleep(3)
     print("\n" + "="*60)
     
-    # Passo 6: Configurar e testar usr_E
-    print("6. Configurando e testando usr_E...")
+    # Passo 6: Configurar e testar usr_e
+    print("6. Configurando e testando usr_e...")
     time.sleep(1)
     if setup_usr_e_privileges():
         time.sleep(1)
