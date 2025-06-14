@@ -1,3 +1,8 @@
-psycopg2-binary==2.9.7
-python-dotenv==1.0.0
 Faker==19.6.2
+gitdb==4.0.12
+GitPython==3.1.41
+psycopg2-binary==2.9.7
+python-dateutil==2.9.0.post0
+python-dotenv==1.0.0
+six==1.17.0
+smmap==5.0.2
