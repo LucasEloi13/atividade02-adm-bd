@@ -81,7 +81,7 @@ def test_usr_a():
         
         result = db_usr_a.fetch_all("SELECT COUNT(*) FROM tarefa01.DEPENDENTE;")
         print("   RESULTADO ESPERADO: usr_a não deve conseguir acessar DEPENDENTE")
-
+        time.sleep(1)
         
         # Teste 4: Conceder privilégio a outro usuário (deve funcionar)
         print("\nTeste 4: Conceder privilégio a usr_b")

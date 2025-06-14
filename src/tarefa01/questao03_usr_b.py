@@ -88,6 +88,7 @@ def test_usr_b():
         print("\nTeste 3: Tentar acessar tabela original FUNCIONARIO")
         result = db_usr_b.fetch_all("SELECT Salario FROM tarefa01.FUNCIONARIO LIMIT 1;")
         print("   RESULTADO ESPERADO: usr_b não deve conseguir acessar Salario")
+        time.sleep(1)   
         
         # Teste 4: Tentar acessar tabela original DEPARTAMENTO (deve falhar)
         print("\nTeste 4: Tentar acessar tabela original DEPARTAMENTO")

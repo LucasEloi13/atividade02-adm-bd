@@ -55,6 +55,20 @@ class DatabaseConnection:
                 pass  # Conexão pode estar fechada
             return None
 
+    def execute_query_silent(self, query, params=None):
+        """Executa uma query no banco de dados sem imprimir erros"""
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(query, params)
+            self.connection.commit()
+            return cursor
+        except Exception:
+            try:
+                self.connection.rollback()
+            except Exception:
+                pass  # Conexão pode estar fechada
+            return None
+
     def fetch_all(self, query, params=None):
         """Executa uma query e retorna todos os resultados"""
         try:
