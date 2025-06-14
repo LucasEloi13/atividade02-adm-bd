@@ -3,7 +3,7 @@ import os
 import time
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from cleanup import cleanup_all
+# from cleanup import cleanup_all
 from create_users import create_users
 from questao02_usr_a import setup_usr_a_privileges, test_usr_a
 from questao03_usr_b import setup_usr_b_privileges, test_usr_b
@@ -49,12 +49,12 @@ def main():
     """Executa todos os testes de controle de acesso"""
     print("=== INICIANDO CONFIGURAÇÃO DE CONTROLE DE ACESSO ===\n")
     
-    # Passo 0: Limpeza do ambiente
-    print("0. Limpando ambiente anterior...")
-    cleanup_all()
-    time.sleep(3)
+    # # Passo 0: Limpeza do ambiente
+    # print("0. Limpando ambiente anterior...")
+    # cleanup_all()
+    # time.sleep(3)
     
-    print("\n" + "="*60)
+    # print("\n" + "="*60)
     
     # Passo 1: Criar usuários
     print("1. Criando usuários...")

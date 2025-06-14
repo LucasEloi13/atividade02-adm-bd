@@ -19,19 +19,16 @@ def create_users():
     
     try:
         for i, user in enumerate(users):
-            # Remover usuário se existir
-            db.execute_query(f"DROP USER IF EXISTS {user};")
-            time.sleep(0.2)
-            
-            # Criar usuário com permissão de LOGIN
-            db.execute_query(f"CREATE USER {user} WITH PASSWORD '{passwords[i]}' LOGIN;")
-            print(f"   Usuário {user} criado com sucesso!")
+            try: 
+                db.execute_query(f"CREATE USER {user} WITH PASSWORD '{passwords[i]}' LOGIN;")
+                print(f"   Usuário {user} criado.")
+            except Exception as e:
+                print(f"   Erro ao criar usuário {user}: {e}")
             time.sleep(0.5)
-        
         return True
         
     except Exception as e:
-        print(f"Erro ao criar usuários: {e}")
+        pass
         return False
     finally:
         db.disconnect()
