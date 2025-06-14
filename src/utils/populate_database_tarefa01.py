@@ -3,16 +3,18 @@ from faker import Faker
 import random
 from datetime import date, timedelta
 
-def populate_database():
-    """Popula o banco de dados com dados fictícios"""
+def populate_database_tarefa01():
+    """Popula o banco de dados da Tarefa 01 com dados fictícios"""
     fake = Faker('pt_BR')
     db = DatabaseConnection()
     conn = db.connect()
     
     if not conn:
-        return
+        return False
     
     try:
+        print("Populando banco da Tarefa 01...")
+        
         # 1. Inserir DEPARTAMENTOS
         departamentos = [
             ('Recursos Humanos', 1, None, '2020-01-15'),
@@ -24,7 +26,7 @@ def populate_database():
         
         for dept in departamentos:
             db.execute_query(
-                "INSERT INTO DEPARTAMENTO (Dnome, Dnumero, Cpf_gerente, Data_inicio_gerente) VALUES (%s, %s, %s, %s)",
+                "INSERT INTO tarefa01.DEPARTAMENTO (Dnome, Dnumero, Cpf_gerente, Data_inicio_gerente) VALUES (%s, %s, %s, %s)",
                 dept
             )
         
@@ -52,14 +54,14 @@ def populate_database():
             )
             
             db.execute_query(
-                "INSERT INTO FUNCIONARIO (Pronome, Minicial, Unome, Cpf, Datanasc, Endereco, Sexo, Salario, Cpf_superior, Dnr) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                "INSERT INTO tarefa01.FUNCIONARIO (Pronome, Minicial, Unome, Cpf, Datanasc, Endereco, Sexo, Salario, Cpf_superior, Dnr) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 funcionario
             )
         
         # Atualizar gerentes nos departamentos
         for i, cpf in enumerate(gerentes_cpfs):
             db.execute_query(
-                "UPDATE DEPARTAMENTO SET Cpf_gerente = %s WHERE Dnumero = %s",
+                "UPDATE tarefa01.DEPARTAMENTO SET Cpf_gerente = %s WHERE Dnumero = %s",
                 (cpf, i + 1)
             )
         
@@ -67,6 +69,12 @@ def populate_database():
         for i in range(15):
             cpf = fake.cpf().replace('.', '').replace('-', '')
             funcionarios_cpfs.append(cpf)
+            
+            # Garantir que alguns funcionários sejam do departamento 3
+            if i < 3:
+                dept = 3
+            else:
+                dept = random.randint(1, 5)
             
             funcionario = (
                 fake.first_name(),
@@ -78,11 +86,11 @@ def populate_database():
                 random.choice(['M', 'F']),
                 round(random.uniform(3000, 8000), 2),
                 random.choice(gerentes_cpfs),  # Superior aleatório
-                random.randint(1, 5)  # Departamento aleatório
+                dept  # Departamento
             )
             
             db.execute_query(
-                "INSERT INTO FUNCIONARIO (Pronome, Minicial, Unome, Cpf, Datanasc, Endereco, Sexo, Salario, Cpf_superior, Dnr) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+                "INSERT INTO tarefa01.FUNCIONARIO (Pronome, Minicial, Unome, Cpf, Datanasc, Endereco, Sexo, Salario, Cpf_superior, Dnr) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
                 funcionario
             )
         
@@ -100,7 +108,7 @@ def populate_database():
         
         for loc in localizacoes:
             db.execute_query(
-                "INSERT INTO LOCALIZACAO_DEP (Dnumero, Dlocal) VALUES (%s, %s)",
+                "INSERT INTO tarefa01.LOCALIZACAO_DEP (Dnumero, Dlocal) VALUES (%s, %s)",
                 loc
             )
         
@@ -117,7 +125,7 @@ def populate_database():
         
         for proj in projetos:
             db.execute_query(
-                "INSERT INTO PROJETO (Projnome, Projnumero, Projlocal, Dnum) VALUES (%s, %s, %s, %s)",
+                "INSERT INTO tarefa01.PROJETO (Projnome, Projnumero, Projlocal, Dnum) VALUES (%s, %s, %s, %s)",
                 proj
             )
         
@@ -130,7 +138,7 @@ def populate_database():
             for proj_num in projetos_selecionados:
                 horas = round(random.uniform(10, 40), 1)
                 db.execute_query(
-                    "INSERT INTO TRABALHA_EM (Fcpf, Pnr, Horas) VALUES (%s, %s, %s)",
+                    "INSERT INTO tarefa01.TRABALHA_EM (Fcpf, Pnr, Horas) VALUES (%s, %s, %s)",
                     (cpf, proj_num, horas)
                 )
         
@@ -148,16 +156,18 @@ def populate_database():
                 )
                 
                 db.execute_query(
-                    "INSERT INTO DEPENDENTE (Fcpf, Nome_dependente, Sexo, Datanasc, Parentesco) VALUES (%s, %s, %s, %s, %s)",
+                    "INSERT INTO tarefa01.DEPENDENTE (Fcpf, Nome_dependente, Sexo, Datanasc, Parentesco) VALUES (%s, %s, %s, %s, %s)",
                     dependente
                 )
         
-        print("Banco de dados populado com sucesso!")
+        print("Banco de dados da Tarefa 01 populado com sucesso!")
+        return True
         
     except Exception as e:
         print(f"Erro ao popular banco de dados: {e}")
+        return False
     finally:
         db.disconnect()
 
 if __name__ == "__main__":
-    populate_database()
+    populate_database_tarefa01()

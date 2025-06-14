@@ -7,7 +7,7 @@ from utils.database_connection import DatabaseConnection
 
 def setup_usr_e_privileges():
     """
-    Questão 6: usr_e pode recuperar qualquer atributo de FUNCIONARIO,
+    Questão 6: usr_E pode recuperar qualquer atributo de FUNCIONARIO,
     mas somente para tuplas de FUNCIONARIO que têm Dnr = 3.
     """
     db = DatabaseConnection()
@@ -17,18 +17,19 @@ def setup_usr_e_privileges():
         return False
     
     try:
-        # Criar visão com RLS (Row Level Security) para usr_e
-        print("Criando visão para FUNCIONARIO com RLS...")
+        # Conceder uso do schema
+        db.execute_query("GRANT USAGE ON SCHEMA tarefa01 TO usr_e;")
+        
+        # Criar visão com RLS (Row Level Security) para usr_E
         db.execute_query("""
             CREATE OR REPLACE VIEW vw_funcionario_usr_e AS
             SELECT *
-            FROM FUNCIONARIO
+            FROM tarefa01.FUNCIONARIO
             WHERE Dnr = 3;
         """)
         time.sleep(0.5)
         
         # Conceder SELECT na visão
-        print("Concedendo privilégios de SELECT na visão...")
         db.execute_query("GRANT SELECT ON vw_funcionario_usr_e TO usr_e;")
         
         print("Privilégios configurados para usr_e")
@@ -41,8 +42,8 @@ def setup_usr_e_privileges():
         db.disconnect()
 
 def test_usr_e():
-    """Testa os privilégios do usr_e"""
-    print("\n=== TESTANDO PRIVILÉGIOS DO usr_e ===")
+    """Testa os privilégios do usr_E"""
+    print("\n=== TESTANDO PRIVILÉGIOS DO USR_E ===")
     time.sleep(1)
     
     db_usr_e = DatabaseConnection()
@@ -68,8 +69,30 @@ def test_usr_e():
         
         # Teste 2: Tentar acessar tabela original FUNCIONARIO (deve falhar)
         print("\nTeste 2: Tentar acessar tabela original FUNCIONARIO")
-        result = db_usr_e.fetch_all("SELECT COUNT(*) FROM FUNCIONARIO;")
-        print("   RESULTADO ESPERADO: usr_e não deveria conseguir acessar tabela original")
+
+        result = db_usr_e.fetch_all("SELECT COUNT(*) FROM tarefa01.FUNCIONARIO;")
+        print("   RESULTADO ESPERADO: usr_e não deve conseguir acessar tabela original")
+
+        
+        # Teste 3: Verificar se só vê funcionários do departamento 3
+        print("\nTeste 3: Verificar restrição por departamento")
+        result = db_usr_e.fetch_all("SELECT DISTINCT Dnr FROM vw_funcionario_usr_e;")
+        if result:
+            dept_numbers = [row['dnr'] for row in result]
+            if all(dnr == 3 for dnr in dept_numbers):
+                print("   SUCESSO: usr_e só consegue ver funcionários do departamento 3")
+            else:
+                print(f"   ERRO: usr_e está vendo funcionários de outros departamentos: {dept_numbers}")
+        else:
+            print("   SUCESSO: Restrição funcionando (nenhum funcionário no dept 3)")
+        time.sleep(1)
+        
+        # Teste 4: Tentar acessar outras tabelas (deve falhar)
+        print("\nTeste 4: Tentar acessar DEPENDENTE")
+
+        result = db_usr_e.fetch_all("SELECT COUNT(*) FROM tarefa01.DEPENDENTE;")
+        print("   ERRO: usr_e não deve conseguir acessar DEPENDENTE")
+
         time.sleep(1)
         
     except Exception as e:

@@ -11,6 +11,7 @@ from questao04_usr_c import setup_usr_c_privileges, test_usr_c
 from questao05_usr_d import setup_usr_d_privileges, test_usr_d
 from questao06_usr_e import setup_usr_e_privileges, test_usr_e
 
+
 def verify_users_created():
     """Verifica se os usuários foram criados corretamente"""
     from utils.database_connection import DatabaseConnection

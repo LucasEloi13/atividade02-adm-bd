@@ -49,7 +49,10 @@ class DatabaseConnection:
             return cursor
         except Exception as error:
             print(f"Erro ao executar query: {error}")
-            self.connection.rollback()
+            try:
+                self.connection.rollback()
+            except Exception:
+                pass  # Conexão pode estar fechada
             return None
 
     def fetch_all(self, query, params=None):
@@ -60,4 +63,8 @@ class DatabaseConnection:
             return cursor.fetchall()
         except Exception as error:
             print(f"Erro ao buscar dados: {error}")
+            try:
+                self.connection.rollback()
+            except Exception:
+                pass  # Conexão pode estar fechada
             return None
