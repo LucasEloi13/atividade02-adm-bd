@@ -17,7 +17,7 @@ def main():
     # Passo 1: Limpeza
     print("1. Limpando ambiente anterior...")
     cleanup_vendasdb()
-    time.sleep(2)
+    time.sleep(3)
     
     print("\n" + "="*60)
 
