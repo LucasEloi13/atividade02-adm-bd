@@ -40,8 +40,13 @@ docker exec -i $CONTAINER_NAME bash -c "
     
     echo 'Executando setup do ambiente...'
     ./setup_env.sh
-    
+"
+
+clear
+
+docker exec -i $CONTAINER_NAME bash -c "
     echo 'Executando main.py da tarefa01...'
+    cd /workspaces/atividade02-adm-bd/ || exit 1
     python src/tarefa01/main.py
 "
 

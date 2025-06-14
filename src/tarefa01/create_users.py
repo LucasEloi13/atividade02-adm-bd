@@ -20,7 +20,7 @@ def create_users():
     try:
         for i, user in enumerate(users):
             try: 
-                db.execute_query(f"CREATE USER {user} WITH PASSWORD '{passwords[i]}' LOGIN;")
+                db.execute_silent(f"CREATE USER {user} WITH PASSWORD '{passwords[i]}' LOGIN;")
                 print(f"   Usuário {user} criado.")
             except Exception as e:
                 print(f"   Erro ao criar usuário {user}: {e}")

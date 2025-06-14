@@ -25,8 +25,8 @@ def cleanup_vendasdb():
         for user in users:
             for role in roles:
                 try:
-                    db.execute_query(f"REVOKE {role} FROM {user};")
-                    time.sleep(0.1)
+                    db.execute_silent(f"REVOKE {role} FROM {user};")
+                    
                 except Exception:
                     pass 
         
@@ -37,16 +37,16 @@ def cleanup_vendasdb():
         for role in roles:
             # Revogar privilégios do schema
             try:
-                db.execute_query(f"REVOKE ALL ON SCHEMA vendasdb FROM {role};")
-                time.sleep(0.1)
+                db.execute_silent(f"REVOKE ALL ON SCHEMA vendasdb FROM {role};")
+                
             except Exception:
                 pass
             
             # Revogar privilégios das tabelas
             for table in tables:
                 try:
-                    db.execute_query(f"REVOKE ALL PRIVILEGES ON vendasdb.{table} FROM {role};")
-                    time.sleep(0.1)
+                    db.execute_silent(f"REVOKE ALL PRIVILEGES ON vendasdb.{table} FROM {role};")
+                    
                 except Exception:
                     pass  
         
@@ -56,9 +56,9 @@ def cleanup_vendasdb():
         print("Removendo roles...")
         for role in roles:
             try:
-                db.execute_query(f"DROP ROLE IF EXISTS {role};")
+                db.execute_silent(f"DROP ROLE IF EXISTS {role};")
                 print(f"   Role {role} removida")
-                time.sleep(0.2)
+                
             except Exception as e:
                 print(f"   Erro ao remover role {role}: {e}")
         

@@ -9,112 +9,48 @@ O projeto está dividido em duas tarefas principais:
 - **Tarefa 01**: Controle de acesso granular usando visões e privilégios específicos
 - **Tarefa 02**: Sistema de vendas com controle baseado em roles
 
-## 🐳 Configuração do Ambiente Docker
+## 🚀 Como Executar
 
 ### Pré-requisitos
 - Docker e Docker Compose instalados
-- VS Code com extensão Dev Containers (opcional, porém mais fácil)
+- Git
 
-### Opção 1: Usando VS Code Dev Containers
-
-1. Clone o repositório
-2. Abra o projeto no VS Code
-3. Quando solicitado, clique em "Reopen in Container"
-4. Aguarde a construção do container
-
-### Opção 2: Docker Compose Manual
+### Opção 1: Execução Rápida (Recomendada)
 
 ```bash
-# Clonar o repositório
-git clone <seu-repositorio>
-cd postgres
-
-# Subir os containers
-docker-compose -f .devcontainer/docker-compose.yml up -d
-
-# Acessar o container
-docker exec -it <container-name> bash
+git clone https://github.com/LucasEloi13/atividade02-adm-bd.git
+cd atividade02-adm-bd
+chmod +x run_tarefa01.sh run_tarefa02.sh
+```
+#### Execução Tarefa01
+```bash
+./run_tarefa01.sh
+```
+#### Execução Tarefa02
+```bash
+./run_tarefa02.sh
 ```
 
-## ⚙️ Configuração Inicial
+### Opção 2: Usando VS Code Dev Container
 
-### Instalação Automática
+**Pré-requisito adicional**: VS Code com extensão Dev Containers
 
-Execute o script de configuração para preparar todo o ambiente:
+1. Abra o projeto no VS Code
+2. Quando solicitado, clique em "Reopen in Container"
+3. Aguarde a construção do ambiente
+4. No terminal do VS code conectado ao container, execute:
 
 ```bash
-# Dentro do container
 ./setup_env.sh
 ```
+5. Rode os scripts normalmente no VSCode
 
-Este script irá:
-- Instalar todas as dependências Python
-- Criar schemas e tabelas para ambas as tarefas
-- Popular o banco de dados com dados fictícios
 
-### Instalação Manual
-
-Se preferir executar passo a passo:
-
-```bash
-# Instalar dependências
-pip install -r requirements.txt
-
-# Criar tabelas
-python src/utils/create_tables_tarefa01.py
-python src/utils/create_tables_tarefa02.py
-
-# Popular banco de dados
-python src/utils/populate_database_tarefa01.py
-python src/utils/populate_database_tarefa02.py
-```
 
 ## 🎯 Tarefa 01 - Controle de Acesso Granular
 
 ### Objetivo
 Implementar políticas específicas de controle de acesso onde cada usuário tem privilégios customizados através de visões e restrições.
-
-### Estrutura
-```
-src/tarefa01/
-├── create_users.py         # Cria usuários base
-├── cleanup.py             # Limpa ambiente
-├── questao02_usr_a.py     # usr_a: Acesso total exceto DEPENDENTE
-├── questao03_usr_b.py     # usr_b: Visões limitadas de FUNCIONARIO/DEPARTAMENTO
-├── questao04_usr_c.py     # usr_c: Modifica TRABALHA_EM, consulta limitada
-├── questao05_usr_d.py     # usr_d: Acesso total FUNCIONARIO/DEPENDENTE
-├── questao06_usr_e.py     # usr_e: FUNCIONARIO apenas Dnr=3
-└── main.py               # Execução completa
-```
-
-### Execução
-
-#### Opção A: Teste Completo Automatizado
-```bash
-cd src/tarefa01
-python main.py
-```
-
-#### Opção B: Execução Individual
-
-1. **Criar usuários base:**
-```bash
-python create_users.py
-```
-
-2. **Executar questões individuais:**
-```bash
-python questao02_usr_a.py    # Teste usr_a
-python questao03_usr_b.py    # Teste usr_b
-python questao04_usr_c.py    # Teste usr_c
-python questao05_usr_d.py    # Teste usr_d
-python questao06_usr_e.py    # Teste usr_e
-```
-
-3. **Limpar ambiente (opcional):**
-```bash
-python cleanup.py
-```
 
 ### Políticas Implementadas
 
@@ -126,48 +62,10 @@ python cleanup.py
 | usr_d | FUNCIONARIO + DEPENDENTE | Só modifica DEPENDENTE |
 | usr_e | FUNCIONARIO completo | Apenas funcionários com Dnr = 3 |
 
-## 🏪 Tarefa 02 - Sistema de Vendas
+## 🎯 Tarefa 02 - Sistema de Vendas
 
 ### Objetivo
 Implementar controle de acesso baseado em roles para um sistema de vendas com diferentes níveis hierárquicos.
-
-### Estrutura
-```
-src/tarefa02/
-├── create_roles.py        # Cria roles e atribui usuários
-├── cleanup_vendasdb.py    # Limpa ambiente
-├── test_admin.py          # Testa role_adm
-├── test_gerente.py        # Testa role_gerente
-├── test_atendente.py      # Testa role_atendente
-└── main.py               # Execução completa
-```
-
-### Execução
-
-#### Opção A: Teste Completo Automatizado
-```bash
-cd src/tarefa02
-python main.py
-```
-
-#### Opção B: Execução Individual
-
-1. **Criar roles e atribuir usuários:**
-```bash
-python create_roles.py
-```
-
-2. **Executar testes individuais:**
-```bash
-python test_admin.py       # Teste administrador
-python test_gerente.py     # Teste gerente
-python test_atendente.py   # Teste atendentes
-```
-
-3. **Limpar ambiente (opcional):**
-```bash
-python cleanup_vendasdb.py
-```
 
 ### Roles Implementadas
 
@@ -194,7 +92,7 @@ python cleanup_vendasdb.py
 ## 🗂️ Estrutura do Projeto
 
 ```
-/workspaces/postgres/
+atividade02-adm-bd/
 ├── .devcontainer/
 │   ├── docker-compose.yml
 │   └── Dockerfile
@@ -215,6 +113,8 @@ python cleanup_vendasdb.py
 ├── .env
 ├── requirements.txt
 ├── setup_env.sh
+├── run_tarefa01.sh
+├── run_tarefa02.sh
 └── README.md
 ```
 
@@ -243,23 +143,6 @@ POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 POSTGRES_DB=postgres
 POSTGRES_PORT=5432
-```
-
-## 🚀 Execução Rápida
-
-Para executar todo o projeto do zero:
-
-```bash
-# 1. Configurar ambiente
-./setup_env.sh
-
-# 2. Executar Tarefa 01
-cd src/tarefa01
-python main.py
-
-# 3. Executar Tarefa 02
-cd ../tarefa02
-python main.py
 ```
 
 ## 📋 Dependências
